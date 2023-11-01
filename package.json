@@ -5,7 +5,7 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npx firebase deploy",
     "serve": "vite preview"
   },
   "license": "MIT",
@@ -15,8 +15,9 @@
     "vite-plugin-solid": "^2.7.0"
   },
   "dependencies": {
-    "@solidjs/router": "^0.8.3",  
+    "@solidjs/router": "^0.8.3",
     "@supabase/supabase-js": "^2.38.4",
+    "firebase-tools": "^12.8.0",
     "solid-js": "^1.7.6"
   }
 }
