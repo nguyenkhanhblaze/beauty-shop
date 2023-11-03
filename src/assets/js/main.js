@@ -15,19 +15,14 @@
 
         // projects filters isotop
         $(".product-filters ul").on('click', 'li.li-product', function () {
-            console.log('here');
             $(".product-filters li").removeClass("active");
             $(this).addClass("active");
 
             var selector = $(this).attr('data-filter');
-
             $(".product-lists").isotope({
                 filter: selector,
             });
         });
-
-        // // isotop inner
-        // $(".product-lists").isotope();
 
         // magnific popup
         $('.popup-youtube').magnificPopup({
@@ -62,8 +57,6 @@
             $(".hero-btns").addClass("animated fadeInUp").css({ 'opacity': '0', 'animation-delay': '0.5s' });
         });
 
-
-
         // stikcy js
         $("#sticker").sticky({
             topSpacing: 0
@@ -83,12 +76,10 @@
         $(".close-btn").on("click", function () {
             $(".search-area").removeClass("search-active");
         });
-
     });
 
-    $('li#li-datafilter-all').trigger("click");
-    jQuery(window).on("load", function () {
-        // isotop inner
-        jQuery(".loader").fadeOut(1000);
-    });
+    // jQuery(window).on("load", function () {
+    //     // isotop inner
+    //     jQuery(".loader").fadeOut(1000);
+    // });
 }(jQuery));

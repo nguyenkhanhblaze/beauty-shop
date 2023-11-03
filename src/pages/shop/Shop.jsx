@@ -17,6 +17,16 @@ const Shop = () => {
     const getProducts = async () => {
         var datas = await supabase.from('products').select()
         setProducts(datas.data)
+        $('#datafilter-all').trigger("click")
+        jQuery(".loader").fadeOut()
+    }
+
+    // Format number as currency
+    const priceFormatter = (price) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price)
     }
 
     onMount(() => {
@@ -24,39 +34,19 @@ const Shop = () => {
         getProducts()
     })
 
-
-
     return (
         <>
-            {/*PreLoader*/}
+            {/* PreLoader */}
             <div class="loader">
                 <div class="loader-inner">
                     <div class="circle"></div>
                 </div>
             </div>
-            {/*PreLoader Ends*/}
+            {/* PreLoader Ends */}
 
             {/* Header Component */}
             <Header />
-
-            {/* search area */}
-            <div class="search-area">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <span class="close-btn"><i class="fas fa-window-close"></i></span>
-                            <div class="search-bar">
-                                <div class="search-bar-tablecell">
-                                    <h3>Search For:</h3>
-                                    <input type="text" placeholder="Keywords" />
-                                    <button type="submit">Search <i class="fas fa-search"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* end search arewa */}
+            {/* Header Component Ends */}
 
             {/* breadcrumb-section */}
             <div class="breadcrumb-section breadcrumb-bg">
@@ -81,13 +71,10 @@ const Shop = () => {
                         <div class="col-md-12">
                             <div class="product-filters">
                                 <ul>
-                                    <li class="active li-product" data-filter="*" id="li-datafilter-all">All</li>
+                                    <li id="datafilter-all" class="active li-product" data-filter="*">All</li>
                                     <For each={categories()}>{(category, i) =>
                                         <li class="li-product" data-filter={'.' + category.name}>{category.name}</li>
                                     }</For>
-                                    {/* <li data-filter=".strawberry">Strawberry</li>
-                                    <li data-filter=".berry">Berry</li>
-                                    <li data-filter=".lemon">Lemon</li> */}
                                 </ul>
                             </div>
                         </div>
@@ -98,27 +85,17 @@ const Shop = () => {
                             <div class={`col-lg-4 col-md-6 text-center ${product.name}`}>
                                 <div class="single-product-item">
                                     <div class="product-image">
-                                        <a href="single-product.html"><img src={product.image} /></a>
+                                        <a href={`/detail/${product.id}`}><img src={product.image} class="img-product" /></a>
                                     </div>
                                     <h3>{product.name}</h3>
-                                    <p class="product-price"><span>{product.description}</span>{product.prices}</p>
+                                    <p class="product-price"><span>{product.description}</span>{priceFormatter(product.prices)}</p>
                                     <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
                                 </div>
                             </div>
                         }</For>
-                        {/* <div class="col-lg-4 col-md-6 text-center Berry">
-                            <div class="single-product-item">
-                                <div class="product-image">
-                                    <a href="single-product.html"><img src="/src/assets/img/products/product-img-1.jpg" alt="" /></a>
-                                </div>
-                                <h3>Strawberry</h3>
-                                <p class="product-price"><span>Per Kg</span> 85$ </p>
-                                <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-                            </div>
-                        </div> */}
                     </div>
 
-                    <div class="row">
+                    {/* <div class="row">
                         <div class="col-lg-12 text-center">
                             <div class="pagination-wrap">
                                 <ul>
@@ -130,13 +107,17 @@ const Shop = () => {
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
+            <style>{`
+                .img-product {height: 24vh}
+            `}</style>
             {/* end products */}
 
             {/* Footer Component */}
             <Footer />
+            {/* Footer Component Ends */}
         </>
     )
 }
