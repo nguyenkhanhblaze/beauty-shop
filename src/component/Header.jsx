@@ -4,8 +4,16 @@ import { } from "/src/assets/js/jquery.magnific-popup.min.js";
 import { } from "/src/assets/js/jquery.meanmenu.min.js";
 import { } from "/src/assets/js/sticker.js";
 import { } from "/src/assets/js/main.js";
+import { createSignal } from "solid-js";
 
 const Header = () => {
+    const [keyWord, setKeyWord] = createSignal('')
+
+    // const handleSearch = () => {
+    //     console.log("clicked");
+    //     window.location.replace("/?keyword=" + keyWord())
+    // }
+
     return (
         <>
             {/* HEADER */}
@@ -62,8 +70,10 @@ const Header = () => {
                             <div class="search-bar">
                                 <div class="search-bar-tablecell">
                                     <h3>Search For:</h3>
-                                    <input type="text" placeholder="Keywords" />
-                                    <button type="submit">Search <i class="fas fa-search"></i></button>
+                                    <form action={`/search/${keyWord()}`} method="get">
+                                        <input type="text" placeholder="Keywords" value={keyWord()} onChange={(e) => setKeyWord(e.target.value)} />
+                                        <button type="submit">Search <i class="fas fa-search"></i></button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

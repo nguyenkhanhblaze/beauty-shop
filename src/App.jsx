@@ -10,6 +10,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" component={Shop} />
+        <Route path="/search/:keyword" component={Shop} />
         <Route path="/detail/:id" component={Detail} />
         <Route path="/about" component={About} />
         <Route path="/contact" component={Contact} />
