@@ -30,7 +30,7 @@ const Header = () => {
                                 {/* logo */}
                                 <div class="site-logo">
                                     <a href="/">
-                                        <img src="/src/assets/img/logo.png" alt="" />
+                                        <img src="/img/logo.png" alt="" />
                                     </a>
                                 </div>
                                 {/* logo */}

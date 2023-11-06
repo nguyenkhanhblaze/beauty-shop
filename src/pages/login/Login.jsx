@@ -37,7 +37,7 @@ const Login = () => {
                 <div id="formContent">
 
                     <div class="fadeIn first">
-                        <img src="/src/assets/img/logo.png" id="icon" alt="User Icon" />
+                        <img src="/img/logo.png" id="icon" alt="User Icon" />
                     </div>
 
                     <form>
