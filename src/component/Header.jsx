@@ -5,7 +5,6 @@ import { } from "/src/assets/js/jquery.meanmenu.min.js";
 import { } from "/src/assets/js/sticker.js";
 import { } from "/src/assets/js/main.js";
 import { createSignal } from "solid-js";
-import { onMount } from "solid-js";
 
 const Header = () => {
     const [keyWord, setKeyWord] = createSignal('')

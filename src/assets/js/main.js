@@ -77,9 +77,4 @@
             $(".search-area").removeClass("search-active");
         });
     });
-
-    // jQuery(window).on("load", function () {
-    //     // isotop inner
-    //     jQuery(".loader").fadeOut(1000);
-    // });
 }(jQuery));

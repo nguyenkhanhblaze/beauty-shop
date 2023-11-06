@@ -1,13 +1,12 @@
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import { createSignal, onMount } from "solid-js";
-import { createClient } from '@supabase/supabase-js';
 import { useParams } from "@solidjs/router";
-import imageExample from "./imageExample"
+import imageExample from "./imageExample";
+import supabase from "../../ultis/supabase";
 
 const Shop = () => {
     const keyWordParam = useParams().keyword
-    const supabase = createClient('https://yiglmbcswqzvxmhstwiq.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpZ2xtYmNzd3F6dnhtaHN0d2lxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTg3MjUzNjEsImV4cCI6MjAxNDMwMTM2MX0.39hMv8Bgxlv3GmUX04JimOM632Ypbee1Zr8r-6cophE')
     const [categories, setCategories] = createSignal([]);
     const [products, setProducts] = createSignal([]);
 
@@ -108,7 +107,7 @@ const Shop = () => {
                             <div class={`col-lg-4 col-md-6 text-center category-${product.category_id}`}>
                                 <div class="single-product-item">
                                     <div class="product-image">
-                                        <a href={`/detail/${product.id}`}><img src={product.image ? product.image : imageExample} class="img-product" /></a>
+                                        <a class="d-inline-block" href={`/detail/${product.id}`}><img src={product.image ? product.image : imageExample} class="img-product" /></a>
                                     </div>
                                     <h3><a style={'color:#242424'} href={`/detail/${product.id}`}>{product.name}</a></h3>
                                     <p class="product-price"><span>{product.description}</span>{priceFormatter(product.prices)}</p>
@@ -134,7 +133,7 @@ const Shop = () => {
                 </div>
             </div>
             <style>{`
-                .img-product {height: 24vh}
+                .img-product {height: 25vh}
                 .custom-keyword-searching {
                     color: #6f6f6f;
                     font-size: 15px;
