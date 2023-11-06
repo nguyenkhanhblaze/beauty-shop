@@ -1,10 +1,23 @@
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import { } from "/src/assets/js/form-validate.js";
+import { onMount } from "solid-js";
 
 const Contact = () => {
+    onMount(() => {
+        jQuery(".loader").fadeOut(1000)
+    })
+
     return (
         <>
+            {/* PreLoader */}
+            <div class="loader">
+                <div class="loader-inner">
+                    <div class="circle"></div>
+                </div>
+            </div>
+            {/* PreLoader Ends */}
+
             {/* Header Component */}
             <Header />
             {/* Header Component Ends */}

@@ -5,14 +5,20 @@ import { } from "/src/assets/js/jquery.meanmenu.min.js";
 import { } from "/src/assets/js/sticker.js";
 import { } from "/src/assets/js/main.js";
 import { createSignal } from "solid-js";
+import { onMount } from "solid-js";
 
 const Header = () => {
     const [keyWord, setKeyWord] = createSignal('')
 
-    // const handleSearch = () => {
-    //     console.log("clicked");
-    //     window.location.replace("/?keyword=" + keyWord())
-    // }
+    const isActiveMenu = (data) => {
+        var pathURL = document.location.pathname
+        pathURL = pathURL.substring(1)
+        if (data === pathURL) {
+            return true
+        } else {
+            return false
+        }
+    }
 
     return (
         <>
@@ -33,7 +39,7 @@ const Header = () => {
                                 {/* menu start */}
                                 <nav class="main-menu">
                                     <ul>
-                                        <li class="current-list-item"><a href="/">Shop</a>
+                                        <li class={isActiveMenu('shop') ? 'current-list-item' : ''}><a href="/">Shop</a>
                                             {/* <ul class="sub-menu">
                                                 <li><a href="shop.html">Shop</a></li>
                                                 <li><a href="checkout.html">Check Out</a></li>
@@ -41,8 +47,8 @@ const Header = () => {
                                                 <li><a href="cart.html">Cart</a></li>
                                             </ul> */}
                                         </li>
-                                        <li><a href="/about">About</a></li>
-                                        <li><a href="/contact">Contact</a></li>
+                                        <li class={isActiveMenu('about') ? 'current-list-item' : ''}><a href="/about">About</a></li>
+                                        <li class={isActiveMenu('contact') ? 'current-list-item' : ''}><a href="/contact">Contact</a></li>
                                         <li>
                                             <div class="header-icons">
                                                 <a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>

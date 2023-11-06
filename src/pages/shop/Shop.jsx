@@ -3,6 +3,7 @@ import Footer from "../../component/Footer";
 import { createSignal, onMount } from "solid-js";
 import { createClient } from '@supabase/supabase-js';
 import { useParams } from "@solidjs/router";
+import imageExample from "./imageExample"
 
 const Shop = () => {
     const keyWordParam = useParams().keyword
@@ -18,13 +19,11 @@ const Shop = () => {
 
     const getProducts = async () => {
         if (keyWordParam) {
-            console.log('1');
-            var datas = await supabase.from('products').select().like('name', `%${keyWordParam}%`)
+            var datas = await supabase.rpc('get_products', { keyword: keyWordParam })
             setProducts(datas.data)
             $('#datafilter-all').trigger("click")
             jQuery(".loader").fadeOut()
         } else {
-            console.log('2');
             var datas = await supabase.from('products').select()
             setProducts(datas.data)
             $('#datafilter-all').trigger("click")
@@ -74,6 +73,19 @@ const Shop = () => {
             </div>
             {/* end breadcrumb section */}
 
+            {/* condition search */}
+            <Show when={keyWordParam}>
+                <div class="container mt-3">
+                        <div class="row col-sm">
+                            <h4 class="mt-3">Condition Searched: </h4>
+                            <span class="custom-keyword-searching">{keyWordParam}<a type="button" class="close ml-1" aria-label="Close" href='/'>
+                                <span aria-hidden="true">&times;</span>
+                            </a></span>
+                        </div>
+                </div>
+            </Show>
+            {/* end condition search */}
+
             {/* products */}
             <div class="product-section mt-150 mb-150">
                 <div class="container">
@@ -84,7 +96,7 @@ const Shop = () => {
                                 <ul>
                                     <li id="datafilter-all" class="active li-product" data-filter="*">All</li>
                                     <For each={categories()}>{(category, i) =>
-                                        <li class="li-product" data-filter={'.' + category.name}>{category.name}</li>
+                                        <li class="li-product" data-filter={'.category-' + category.id}>{category.name}</li>
                                     }</For>
                                 </ul>
                             </div>
@@ -93,12 +105,12 @@ const Shop = () => {
 
                     <div class="row product-lists">
                         <For each={products()}>{(product, i) =>
-                            <div class={`col-lg-4 col-md-6 text-center ${product.name}`}>
+                            <div class={`col-lg-4 col-md-6 text-center category-${product.category_id}`}>
                                 <div class="single-product-item">
                                     <div class="product-image">
-                                        <a href={`/detail/${product.id}`}><img src={product.image} class="img-product" /></a>
+                                        <a href={`/detail/${product.id}`}><img src={product.image ? product.image : imageExample} class="img-product" /></a>
                                     </div>
-                                    <h3>{product.name}</h3>
+                                    <h3><a style={'color:#242424'} href={`/detail/${product.id}`}>{product.name}</a></h3>
                                     <p class="product-price"><span>{product.description}</span>{priceFormatter(product.prices)}</p>
                                     <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
                                 </div>
@@ -123,6 +135,17 @@ const Shop = () => {
             </div>
             <style>{`
                 .img-product {height: 24vh}
+                .custom-keyword-searching {
+                    color: #6f6f6f;
+                    font-size: 15px;
+                    background-color: #f3f3f3;
+                    display: inline-block;
+                    padding: 8px 14px;
+                    border-radius: 5px;
+                    margin: 3px;
+                    font-weight: 600;
+                    border-radius: 50px;
+                }
             `}</style>
             {/* end products */}
 

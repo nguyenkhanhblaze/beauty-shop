@@ -318,7 +318,7 @@ p:last-child {
 }
 
 .mt-150 {
-  margin-top: 150px;
+  margin-top: 80px;
 }
 
 @media only screen and (max-width: 767.96px) {
@@ -1322,6 +1322,7 @@ ul.product-share li:hover a {
 .single-product-item:hover {
   -webkit-box-shadow: none;
   box-shadow: none;
+  box-shadow: #fdc698 0px 3px 6px, #fdc698 0px 3px 6px;
 }
 
 .search-bar-tablecell button[type=submit] {
