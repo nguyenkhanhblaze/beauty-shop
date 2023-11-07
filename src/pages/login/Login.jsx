@@ -29,7 +29,7 @@ const Login = () => {
             setIsHandling(false)
         } else {
             sessionStorage.setItem("isLogged", true);
-            navigate('/admin', { replace: true });
+            window.location.replace("/admin");
         }
     }
 

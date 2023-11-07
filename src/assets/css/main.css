@@ -1318,12 +1318,14 @@ ul.product-share li:hover a {
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
+  transition: transform 250ms;
 }
 
 .single-product-item:hover {
   -webkit-box-shadow: none;
   box-shadow: none;
   box-shadow: #fdc698 0px 3px 6px, #fdc698 0px 3px 15px;
+  transform: translateY(-10px);
 }
 
 .search-bar-tablecell button[type=submit] {
