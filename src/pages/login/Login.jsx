@@ -7,7 +7,7 @@ const Login = () => {
     const [password, setPassword] = createSignal('')
     const [isFailedLogin, setIsFailedLogin] = createSignal(false)
     const navigate = useNavigate();
-
+    const [isHandling, setIsHandling] = createSignal(false)
 
     createEffect(() => {
         if (sessionStorage.getItem('isLogged')) {
@@ -16,6 +16,7 @@ const Login = () => {
     })
 
     const actionSubmit = async () => {
+        setIsHandling(true)
         var checkLogin = await supabase
             .from('accounts')
             .select()
@@ -25,6 +26,7 @@ const Login = () => {
 
         if (checkLogin.data.length === 0) {
             setIsFailedLogin(true)
+            setIsHandling(false)
         } else {
             sessionStorage.setItem("isLogged", true);
             navigate('/admin', { replace: true });
@@ -52,6 +54,18 @@ const Login = () => {
 
                 </div>
             </div>
+
+            {/* Overlay Screen */}
+            {
+                isHandling() && (
+                    <div class="overlay">
+                        <div class="overlay__inner">
+                            <div class="overlay__content"><span class="spinner"></span></div>
+                        </div>
+                    </div>
+                )
+            }
+
             <style>{`
                 a {
                     color: #92badd;
@@ -105,7 +119,7 @@ const Login = () => {
                 input[type=button],
                 input[type=submit],
                 input[type=reset] {
-                    background-color: #56baed;
+                    background-color: #F28123;
                     border: none;
                     color: white;
                     padding: 15px 80px;
@@ -114,8 +128,8 @@ const Login = () => {
                     display: inline-block;
                     text-transform: uppercase;
                     font-size: 13px;
-                    -webkit-box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
-                    box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
+                    -webkit-box-shadow: 0 10px 30px 0 #fdc698;
+                    box-shadow: 0 10px 30px 0 #fdc698;
                     -webkit-border-radius: 5px 5px 5px 5px;
                     border-radius: 5px 5px 5px 5px;
                     margin: 5px 20px 40px 20px;
@@ -129,7 +143,7 @@ const Login = () => {
                 input[type=button]:hover,
                 input[type=submit]:hover,
                 input[type=reset]:hover {
-                    background-color: #39ace7;
+                    background-color: #ff7300;
                 }
 
                 input[type=button]:active,
@@ -167,7 +181,7 @@ const Login = () => {
                 input[type=text]:focus,
                 input[type=password]:focus {
                     background-color: #fff;
-                    border-bottom: 2px solid #5fbae9;
+                    border-bottom: 2px solid #F28123;
                 }
 
                 input[type=text]:placeholder,

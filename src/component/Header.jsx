@@ -12,9 +12,13 @@ const Header = () => {
     const isActiveMenu = (data) => {
         var pathURL = document.location.pathname
         pathURL = pathURL.substring(1)
+
         if (data === pathURL) {
             return true
         } else {
+            if (data === 'shop' && (pathURL === '' || pathURL.slice(0, 6) === 'detail')) {
+                return true
+            }
             return false
         }
     }

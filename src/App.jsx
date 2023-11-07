@@ -5,6 +5,7 @@ import Detail from "./pages/detail/Detail";
 import About from "./pages/about/About";
 import Admin from "./pages/admin/Admin";
 import Contact from "./pages/contact/Contact";
+import ErrorNotFound from "./pages/error/ErrorNotFound";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/about" component={About} />
         <Route path="/contact" component={Contact} />
         <Route path="/admin" component={Admin} />
+        <Route path="*" component={ErrorNotFound} />
       </Routes>
     </Router>
     </>
