@@ -63,7 +63,7 @@ const AdminCategory = () => {
                                                 <For each={categories()}>{(category, i) =>
                                                     <tr>
                                                         <td>{i() + 1}</td>
-                                                        <td>{category.name}</td>
+                                                        <td><a href={`/admin_category_edit/${category.id}`}>{category.name}</a></td>
                                                     </tr>
                                                 }</For>
                                             </tbody>
