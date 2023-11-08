@@ -2,6 +2,7 @@ import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import { useParams } from "@solidjs/router";
 import { createSignal, onMount } from "solid-js";
+import imageExample from "/src/assets/js/imageExample";
 import supabase from "../../ultis/supabase";
 
 const Detail = () => {
@@ -66,7 +67,7 @@ const Detail = () => {
                     <div class="row">
                         <div class="col-md-5">
                             <div class="single-product-img">
-                                <img src={product().image} alt="" />
+                                <img src={product().image ? product().image : imageExample} class="img-product" />
                             </div>
                         </div>
                         <div class="col-md-7">

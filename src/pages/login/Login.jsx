@@ -11,9 +11,15 @@ const Login = () => {
 
     createEffect(() => {
         if (sessionStorage.getItem('isLogged')) {
-            navigate('/admin', { replace: true })
+            navigate('/admin_product', { replace: true })
         }
     })
+
+    const trackingEnter = (e) => {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            actionSubmit()
+        }
+    }
 
     const actionSubmit = async () => {
         setIsHandling(true)
@@ -29,7 +35,7 @@ const Login = () => {
             setIsHandling(false)
         } else {
             sessionStorage.setItem("isLogged", true);
-            window.location.replace("/admin");
+            window.location.replace("/admin_product");
         }
     }
 
@@ -44,7 +50,7 @@ const Login = () => {
 
                     <form>
                         <input type="text" id="login" class="fadeIn second" name="login" placeholder="login" onChange={(e) => setEmail(e.target.value)} />
-                        <input type="password" id="password" class="fadeIn third" name="login" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
+                        <input type="password" id="password" class="fadeIn third" name="login" placeholder="password" onChange={(e) => setPassword(e.target.value)} onKeyUp={trackingEnter} />
                         <input type="button" onClick={actionSubmit} class="fadeIn fourth" value="Log In" />
                     </form>
                     <p class={isFailedLogin() ? '' : 'd-none'} style={'color: #e17f7d; margin-bottom: 3rem;'}>Got something wrong while loging</p>

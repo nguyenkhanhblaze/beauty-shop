@@ -3,7 +3,10 @@ import Login from "./pages/login/Login";
 import Shop from "./pages/shop/Shop";
 import Detail from "./pages/detail/Detail";
 import About from "./pages/about/About";
-import Admin from "./pages/admin/Admin";
+import AdminProduct from "./pages/admin/AdminProduct";
+import AdminProductAdd from "./pages/admin/AdminProductAdd";
+import AdminProductEdit from "./pages/admin/AdminProductEdit";
+import AdminCategory from "./pages/admin/AdminCategory";
 import Contact from "./pages/contact/Contact";
 import ErrorNotFound from "./pages/error/ErrorNotFound";
 
@@ -18,7 +21,10 @@ function App() {
         <Route path="/detail/:id" component={Detail} />
         <Route path="/about" component={About} />
         <Route path="/contact" component={Contact} />
-        <Route path="/admin" component={Admin} />
+        <Route path="/admin_product" component={AdminProduct} />
+        <Route path="/admin_product_add" component={AdminProductAdd} />
+        <Route path="/admin_product_edit/:id" component={AdminProductEdit} />
+        <Route path="/admin_category" component={AdminCategory} />
         <Route path="*" component={ErrorNotFound} />
       </Routes>
     </Router>

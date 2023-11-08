@@ -2,7 +2,7 @@ import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import { createSignal, onMount } from "solid-js";
 import { useParams } from "@solidjs/router";
-import imageExample from "./imageExample";
+import imageExample from "/src/assets/js/imageExample";
 import supabase from "../../ultis/supabase";
 
 const Shop = () => {
