@@ -7,21 +7,30 @@ import supabase from "../../ultis/supabase";
 const AdminProductAdd = () => {
     const [form, setForm] = createStore({
         name: '',
-        category_id: '',
-        image: '',
-        prices: '',
-        description: ''
+        category_id: 1,
+        image: null,
+        prices: null,
+        description: null
     })
     const [isErrorForm, setIsErrorForm] = createSignal(false)
     const [categories, setCategories] = createSignal([])
     const [isHandling, setIsHandling] = createSignal(false)
 
-    const onChangeImage = (data, event) => {
-        const [file] = imgInp.files
+    const onChangeImage = async (data, event) => {
+        var [file] = imgInp.files
 
         // Render to preview image
         if (file) {
             blah.src = URL.createObjectURL(file)
+        }
+
+        if (file.size > 2000000) {
+            console.log('Down file size');
+            // Down file size when bigger then 2MB
+            file = await compressImage(file, {
+                quality: 0.2,
+                type: 'image/jpeg',
+            })
         }
 
         // Convert image to base64
@@ -33,6 +42,28 @@ const AdminProductAdd = () => {
             })
         }
         reader.readAsDataURL(file)
+    }
+
+    const compressImage = async (file, { quality = 1, type = file.type }) => {
+        // Get as image data
+        const imageBitmap = await createImageBitmap(file);
+
+        // Draw to canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = imageBitmap.width;
+        canvas.height = imageBitmap.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(imageBitmap, 0, 0);
+
+        // Turn into Blob
+        const blob = await new Promise((resolve) =>
+            canvas.toBlob(resolve, type, quality)
+        );
+
+        // Turn Blob into File
+        return new File([blob], file.name, {
+            type: blob.type,
+        });
     }
 
     const updateFormField = (fieldName, event) => {
@@ -55,9 +86,9 @@ const AdminProductAdd = () => {
             await supabase.from('products').insert(form).then(rs => {
                 setForm({
                     name: '',
-                    category_id: '',
-                    prices: '',
-                    description: ''
+                    category_id: 1,
+                    prices: null,
+                    description: null
                 })
                 blah.src = '#'
                 imgInp.value = ''
@@ -125,7 +156,7 @@ const AdminProductAdd = () => {
                                                     </div>
                                                     <div class="form-group row">
                                                         <div class="col-sm-6 mb-3 mb-sm-0">
-                                                            <input type="file" accept="image/*" id="imgInp" onChange={[onChangeImage, 'image']} />
+                                                            <input type="file" accept="image/*" id="imgInp" onChange={onChangeImage} />
                                                         </div>
                                                         <div class="col-sm-6 mb-3 mb-sm-0">
                                                             <input type="text" class="form-control" placeholder="Prices" value={form.prices} onChange={[updateFormField, 'prices']} />

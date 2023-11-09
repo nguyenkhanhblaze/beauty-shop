@@ -7,9 +7,11 @@ import supabase from "../../ultis/supabase";
 const Admin = () => {
     const navigate = useNavigate();
     const [products, setProducts] = createSignal([])
-
+    const [cbProduct, setCbProduct] = createSignal([])
+    const [isHandling, setIsHandling] = createSignal(false)
+    const [errorMess, setErrorMess] = createSignal('The product has deleted')
     const getProducts = async () => {
-        var datas = await supabase.from('products').select()
+        var datas = await supabase.from('products').select(`id, name, prices, description, created_at`).order('id', { ascending: false })
         setProducts(datas.data)
         $('#dataTable').DataTable()
         jQuery(".loader").fadeOut()
@@ -29,6 +31,38 @@ const Admin = () => {
         }
         getProducts()
     })
+
+    const addCheckBox = (id) => {
+        setCbProduct(cbProduct => [id, ...cbProduct])
+    }
+
+    const addAllCheckBox = () => {
+        var allProductIds = products().map(x => x.id);
+        setCbProduct(allProductIds)
+    }
+
+    const showToast = () => {
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    const deleteProduct = async () => {
+        if (cbProduct().length < 1) {
+            setErrorMess('Please select a product')
+            showToast()
+            return
+        }
+        setIsHandling(true)
+        const { error } = await supabase
+            .from('products')
+            .delete()
+            .in('id', cbProduct())
+        setProducts(products().filter((e) => !cbProduct().includes(e.id)))
+        setErrorMess('The product has deleted')
+        setIsHandling(false)
+        showToast()
+    }
 
     return (
         <>
@@ -66,8 +100,18 @@ const Admin = () => {
                                         <div class="col align-self-center">
                                             <h6 class="m-0 font-weight-bold text-primary">List of Products</h6>
                                         </div>
-                                        <div class="col text-right">
-                                            <a href="/admin_product_add" class="btn btn-primary btn-icon-split">
+                                        <div class="col text-right cus-d-lg">
+                                            <button onClick={deleteProduct} class="btn btn-danger mr-1"><span class="icon text-white-50"><i class="fa fa-trash" aria-hidden="true"></i></span> Delete</button>
+                                            <a href="/admin_product_add" class="btn btn-primary">
+                                                <span class="icon text-white-50"><i class="fas fa-plus-circle"></i></span>
+                                                <span class="text">Add</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="d-sm-none row mt-2">
+                                        <div class="col">
+                                            <button onClick={deleteProduct} class="btn btn-danger mr-1"><span class="icon text-white-50"><i class="fa fa-trash" aria-hidden="true"></i></span> Delete</button>
+                                            <a href="/admin_product_add" class="btn btn-primary">
                                                 <span class="icon text-white-50"><i class="fas fa-plus-circle"></i></span>
                                                 <span class="text">Add</span>
                                             </a>
@@ -79,7 +123,7 @@ const Admin = () => {
                                         <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
-                                                    <th>No.</th>
+                                                    <th><input onClick={addAllCheckBox} type="checkbox" /> No.</th>
                                                     <th>Name</th>
                                                     <th>Prices</th>
                                                     <th>Description</th>
@@ -89,7 +133,7 @@ const Admin = () => {
                                             <tbody id="tbodyTable">
                                                 <For each={products()}>{(product, i) =>
                                                     <tr>
-                                                        <td>{i() + 1}</td>
+                                                        <td><input onClick={[addCheckBox, product.id]} type="checkbox" /> {i() + 1}</td>
                                                         <td><a href={`/admin_product_edit/${product.id}`} >{product.name}</a></td>
                                                         <td>{priceFormatter(product.prices)}</td>
                                                         <td>{product.description}</td>
@@ -111,6 +155,19 @@ const Admin = () => {
                 </div>
                 {/* End of Content Wrapper */}
             </div>
+
+            <div id="snackbar">{errorMess()} <i style={errorMess() === 'Please select a product' ? 'display:none' : ''} class="fa fa-check-circle" aria-hidden="true"></i></div>
+
+            {/* Overlay Screen */}
+            {
+                isHandling() && (
+                    <div class="overlay">
+                        <div class="overlay__inner">
+                            <div class="overlay__content"><span class="spinner"></span></div>
+                        </div>
+                    </div>
+                )
+            }
         </>
     )
 }

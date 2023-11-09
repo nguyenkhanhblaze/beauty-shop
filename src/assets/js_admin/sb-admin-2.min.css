@@ -7277,8 +7277,17 @@ button.bg-dark:hover {
 .d-inline-flex {
     display: inline-flex !important
 }
+@media screen and (max-width:575px) {
+    .cus-d-lg {
+        display: none !important;
+    }
+}
 
 @media (min-width:576px) {
+    /* .cus-d-lg {
+        display: none !important;
+    } */
+
     .d-sm-none {
         display: none !important
     }

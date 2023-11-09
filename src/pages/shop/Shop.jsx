@@ -1,6 +1,6 @@
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
-import { createSignal, onMount } from "solid-js";
+import { createSignal, createEffect } from "solid-js";
 import { useParams } from "@solidjs/router";
 import imageExample from "/src/assets/js/imageExample";
 import supabase from "../../ultis/supabase";
@@ -9,10 +9,12 @@ const Shop = () => {
     const keyWordParam = useParams().keyword
     const [categories, setCategories] = createSignal([]);
     const [products, setProducts] = createSignal([]);
-
+    const [isLoadingMore, setIsLoadingMore] = createSignal(false)
+    const [infiniteScroll, setInfiniteScroll] = createSignal(1000)
+    const [isFullData, setIsFullData] = createSignal(false)
 
     const getCategories = async () => {
-        var datas = await supabase.from('categories').select()
+        var datas = await supabase.from('categories').select(`id, name`)
         setCategories(datas.data)
     }
 
@@ -23,7 +25,7 @@ const Shop = () => {
             $('#datafilter-all').trigger("click")
             jQuery(".loader").fadeOut()
         } else {
-            var datas = await supabase.from('products').select()
+            var datas = await supabase.from('products').select().order('id', { ascending: false }).range(0, 5)
             setProducts(datas.data)
             $('#datafilter-all').trigger("click")
             jQuery(".loader").fadeOut()
@@ -38,9 +40,33 @@ const Shop = () => {
         }).format(price)
     }
 
-    onMount(() => {
+    var localLimit = 5
+    const handleScroll = async () => {
+        console.log(window.scrollY);
+        if (window.scrollY > infiniteScroll() && !isFullData()) {
+            setIsLoadingMore(true)
+            // Call more item
+            setInfiniteScroll(infiniteScroll() + 1000)
+            var { data, error } = await supabase.from('products').select().order('id', { ascending: false }).range(localLimit + 1, localLimit + 6)
+            console.log('error', error);
+            if (data.length > 0) {
+                console.log('inside', localLimit);
+                console.log('got data', data)
+                localLimit = localLimit + 6
+                setProducts(products().concat(data))
+                var elem = document.querySelector('.product-lists');
+                new Isotope(elem, {})
+            } else {
+                setIsFullData(true)
+            }
+            setIsLoadingMore(false)
+        }
+    }
+
+    createEffect(() => {
         getCategories()
         getProducts()
+        window.addEventListener("scroll", handleScroll);
     })
 
     return (
@@ -75,12 +101,12 @@ const Shop = () => {
             {/* condition search */}
             <Show when={keyWordParam}>
                 <div class="container mt-3">
-                        <div class="row col-sm">
-                            <h4 class="mt-3">Condition Searched: </h4>
-                            <span class="custom-keyword-searching">{keyWordParam}<a type="button" class="close ml-1" aria-label="Close" href='/'>
-                                <span aria-hidden="true">&times;</span>
-                            </a></span>
-                        </div>
+                    <div class="row col-sm">
+                        <h4 class="mt-3">Condition Searched: </h4>
+                        <span class="custom-keyword-searching">{keyWordParam}<a type="button" class="close ml-1" aria-label="Close" href='/'>
+                            <span aria-hidden="true">&times;</span>
+                        </a></span>
+                    </div>
                 </div>
             </Show>
             {/* end condition search */}
@@ -109,12 +135,18 @@ const Shop = () => {
                                     <div class="product-image">
                                         <a class="d-inline-block" href={`/detail/${product.id}`}><img src={product.image ? product.image : imageExample} class="img-product" /></a>
                                     </div>
-                                    <h3><a style={'color:#242424'} href={`/detail/${product.id}`}>{product.name}</a></h3>
-                                    <p class="product-price"><span>{product.description}</span>{priceFormatter(product.prices)}</p>
+                                    <h3><a style={'color:#242424'} href={`/detail/${product.id}`}><p class="title-product">{product.name}</p></a></h3>
+                                    <p class="product-price"><span class="txt-desc-product">{product.description}</span>{priceFormatter(product.prices)}</p>
                                     <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
                                 </div>
                             </div>
                         }</For>
+                    </div>
+
+                    <div class={isLoadingMore() ? 'row' : 'd-none row' } style={'place-content: center'}>
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </div>
 
                     {/* <div class="row">
