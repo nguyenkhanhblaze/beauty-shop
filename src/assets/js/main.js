@@ -19,7 +19,7 @@
             $(this).addClass("active");
 
             var selector = $(this).attr('data-filter');
-            $(".product-lists").isotope({
+            $("#product-lists").isotope({
                 filter: selector,
             });
         });

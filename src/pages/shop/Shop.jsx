@@ -1,6 +1,6 @@
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
-import { createSignal, createEffect } from "solid-js";
+import { createSignal, createEffect, onCleanup } from "solid-js";
 import { useParams } from "@solidjs/router";
 import imageExample from "/src/assets/js/imageExample";
 import supabase from "../../ultis/supabase";
@@ -41,32 +41,56 @@ const Shop = () => {
     }
 
     var localLimit = 5
+    var isWaiting = false
     const handleScroll = async () => {
-        console.log(window.scrollY);
-        if (window.scrollY > infiniteScroll() && !isFullData()) {
+        // console.log(window.scrollY);
+        if (window.scrollY > infiniteScroll() && !isFullData() && !isWaiting) {
             setIsLoadingMore(true)
             // Call more item
             setInfiniteScroll(infiniteScroll() + 1000)
+            isWaiting = true
             var { data, error } = await supabase.from('products').select().order('id', { ascending: false }).range(localLimit + 1, localLimit + 6)
-            console.log('error', error);
+            // console.log('error', error)
             if (data.length > 0) {
-                console.log('inside', localLimit);
-                console.log('got data', data)
+                // console.log('inside', localLimit)
+                // console.log('got data', data)
                 localLimit = localLimit + 6
-                setProducts(products().concat(data))
-                var elem = document.querySelector('.product-lists');
-                new Isotope(elem, {})
+                var newRecords = '';
+                data.forEach((product) => {
+                    newRecords += `<div class="grid-item col-lg-4 col-md-6 text-center category-${product.category_id}"}>
+                    <div class="single-product-item">
+                        <div class="product-image">
+                            <a class="d-inline-block" href="/detail/${product.id}"><img src=${product.image ? product.image : imageExample} class="img-product" /></a>
+                        </div>
+                        <h3><a style='color:#242424' href="/detail/${product.id}"><p class="title-product">${product.name}</p></a></h3>
+                        <p class="product-price"><span class="txt-desc-product">${product.description}</span>${priceFormatter(product.prices)}</p>
+                        <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+                    </div>
+                </div>`
+                })
+                var $newItems = $(newRecords)
+                $('#product-lists').isotope('insert', $newItems)
+                isWaiting = false
+                setIsLoadingMore(false)
             } else {
+                // console.log('get full data')
                 setIsFullData(true)
+                setIsLoadingMore(false)
             }
-            setIsLoadingMore(false)
         }
     }
+
+    onCleanup(() => {
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual'
+        }
+        window.scrollTo(0, 0)
+    })
 
     createEffect(() => {
         getCategories()
         getProducts()
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", handleScroll)
     })
 
     return (
@@ -128,9 +152,9 @@ const Shop = () => {
                         </div>
                     </div>
 
-                    <div class="row product-lists">
+                    <div class="row" id="product-lists">
                         <For each={products()}>{(product, i) =>
-                            <div class={`col-lg-4 col-md-6 text-center category-${product.category_id}`}>
+                            <div class={`grid-item col-lg-4 col-md-6 text-center category-${product.category_id}`}>
                                 <div class="single-product-item">
                                     <div class="product-image">
                                         <a class="d-inline-block" href={`/detail/${product.id}`}><img src={product.image ? product.image : imageExample} class="img-product" /></a>
@@ -143,7 +167,7 @@ const Shop = () => {
                         }</For>
                     </div>
 
-                    <div class={isLoadingMore() ? 'row' : 'd-none row' } style={'place-content: center'}>
+                    <div class={isLoadingMore() ? 'row' : 'd-none row'} style={'place-content: center'}>
                         <div class="spinner-border" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
