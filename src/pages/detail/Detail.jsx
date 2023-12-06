@@ -74,7 +74,7 @@ const Detail = () => {
                             <div class="single-product-content">
                                 <h3>{product().name}</h3>
                                 <p class="single-product-pricing"><span>{product().description}</span>{priceFormatter(product().prices)}</p>
-                                <p>{product().description}</p>
+                                <p>Enter quanlity to buy.</p>
                                 <div class="single-product-form">
                                     <form action="index.html">
                                         <input type="number" placeholder="0" />

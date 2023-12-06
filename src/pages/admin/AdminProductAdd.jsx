@@ -7,7 +7,7 @@ import supabase from "../../ultis/supabase";
 const AdminProductAdd = () => {
     const [form, setForm] = createStore({
         name: '',
-        category_id: 1,
+        category_id: null,
         image: null,
         prices: null,
         description: null
@@ -101,6 +101,11 @@ const AdminProductAdd = () => {
     const getCategories = async () => {
         var datas = await supabase.from('categories').select()
         setCategories(datas.data)
+        if (datas.data.length > 0) {
+            setForm({
+                category_id: datas.data[0].id
+            })
+        }
     }
 
     createEffect(() => {

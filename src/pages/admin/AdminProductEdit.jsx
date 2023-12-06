@@ -85,6 +85,12 @@ const AdminProductEdit = () => {
     const getCategories = async () => {
         var datas = await supabase.from('categories').select()
         setCategories(datas.data)
+        // if (datas.data.length > 0) {
+        //     console.log(datas.data);
+        //     setForm({
+        //         category_id: datas.data[0].id
+        //     })
+        // }
     }
 
     createEffect(() => {

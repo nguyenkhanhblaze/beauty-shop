@@ -8,6 +8,7 @@ import AdminProductAdd from "./pages/admin/AdminProductAdd";
 import AdminProductEdit from "./pages/admin/AdminProductEdit";
 import AdminCategory from "./pages/admin/AdminCategory";
 import AdminCategoryAdd from "./pages/admin/AdminCategoryAdd";
+import AdminCategoryEdit from "./pages/admin/AdminCategoryEdit";
 import Contact from "./pages/contact/Contact";
 import Infinitie from "./pages/contact/Infinitie";
 import ErrorNotFound from "./pages/error/ErrorNotFound";
@@ -29,6 +30,7 @@ function App() {
         <Route path="/admin_product_edit/:id" component={AdminProductEdit} />
         <Route path="/admin_category" component={AdminCategory} />
         <Route path="/admin_category_add" component={AdminCategoryAdd} />
+        <Route path="/admin_category_edit/:id" component={AdminCategoryEdit} />
         <Route path="*" component={ErrorNotFound} />
       </Routes>
     </Router>

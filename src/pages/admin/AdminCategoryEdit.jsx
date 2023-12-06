@@ -1,9 +1,12 @@
+import { useParams } from "@solidjs/router";
 import AdminSidebar from "./AdminSidebar";
 import AdminTopbar from "./AdminTopbar";
-import { createSignal } from "solid-js";
+import { createSignal, createEffect } from "solid-js";
 import supabase from "../../ultis/supabase";
 
-const AdminCategoryAdd = () => {
+const AdminCategoryEdit = () => {
+    const categoryID = useParams().id
+
     const [category, setCategory] = createSignal('')
     const [isErrorForm, setIsErrorForm] = createSignal(false)
     const [isHandling, setIsHandling] = createSignal(false)
@@ -27,19 +30,42 @@ const AdminCategoryAdd = () => {
             setIsErrorForm(true)
         } else {
             setIsHandling(true)
-            var dataInsert = {
+            var dataUpdate = {
                 name: category()
             }
-            await supabase.from('categories').insert(dataInsert).then(rs => {
-                setCategory('')
+            await supabase.from('categories').update(dataUpdate).eq('id', categoryID).then(rs => {
                 setIsHandling(false)
                 showToast()
             })
         }
     }
 
+    const getCategorieDetail = async () => {
+        var detailData = await supabase
+        .from('categories')
+        .select('name')
+        .eq('id', categoryID)
+        .limit(1)
+    detailData = detailData.data[0]
+
+    setCategory(detailData.name)
+    jQuery(".loader").fadeOut()
+    }
+
+    createEffect(() => {
+        getCategorieDetail()
+    })
+
     return (
         <>
+            {/* PreLoader */}
+            <div class="loader">
+                <div class="loader-inner">
+                    <div class="circle"></div>
+                </div>
+            </div>
+            {/* PreLoader Ends */}
+
             <div id="wrapper">
 
                 {/* SideBar */}
@@ -66,7 +92,7 @@ const AdminCategoryAdd = () => {
                                         <div class="col">
                                             <div class="p-5">
                                                 <div class="text-center">
-                                                    <h1 class="h4 text-gray-900 mb-4">Create a Category</h1>
+                                                    <h1 class="h4 text-gray-900 mb-4">Edit a Category</h1>
                                                 </div>
                                                 <form action="#" class="user">
                                                     <div class="form-group row">
@@ -76,7 +102,7 @@ const AdminCategoryAdd = () => {
                                                         </div>
                                                     </div>
                                                     <button type="button" onClick={submitForm} class="btn btn-primary btn-user btn-block">
-                                                        Register a category
+                                                        Update a category
                                                     </button>
                                                 </form>
                                             </div>
@@ -96,7 +122,7 @@ const AdminCategoryAdd = () => {
 
             </div>
 
-            <div id="snackbar">The category has added <i class="fa fa-check-circle" aria-hidden="true"></i></div>
+            <div id="snackbar">The category has updated <i class="fa fa-check-circle" aria-hidden="true"></i></div>
 
             {/* Overlay Screen */}
             {
@@ -112,4 +138,4 @@ const AdminCategoryAdd = () => {
     )
 }
 
-export default AdminCategoryAdd
+export default AdminCategoryEdit

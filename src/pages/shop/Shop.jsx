@@ -43,17 +43,13 @@ const Shop = () => {
     var localLimit = 5
     var isWaiting = false
     const handleScroll = async () => {
-        // console.log(window.scrollY);
         if (window.scrollY > infiniteScroll() && !isFullData() && !isWaiting) {
             setIsLoadingMore(true)
             // Call more item
             setInfiniteScroll(infiniteScroll() + 1000)
             isWaiting = true
             var { data, error } = await supabase.from('products').select().order('id', { ascending: false }).range(localLimit + 1, localLimit + 6)
-            // console.log('error', error)
             if (data.length > 0) {
-                // console.log('inside', localLimit)
-                // console.log('got data', data)
                 localLimit = localLimit + 6
                 var newRecords = '';
                 data.forEach((product) => {
